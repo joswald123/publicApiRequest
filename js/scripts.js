@@ -32,7 +32,6 @@ function generateHTML(data) {
                       <p class="card-text cap">${employee.location.city}, ${employee.location.state}</p>
                   </div>
               </div>`;
-      console.log(employee);
       gallery.insertAdjacentHTML("beforeend", html);
     });
   
@@ -71,3 +70,9 @@ function generateHTML(data) {
 // ------------------------------------------
 //  EVENT LISTENERS
 // ------------------------------------------
+
+gallery.addEventListener("click", function (e) {
+    const card = e.target.closest(".card");
+    const index = card.getAttribute("data-index");
+    generateModal(index);
+  });
