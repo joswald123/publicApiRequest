@@ -12,11 +12,11 @@ let employeesData = [];
 // ------------------------------------------
 fetch("https://randomuser.me/api/?results=12")
   .then((res) => res.json())
-  .then((data) => generateHTML(data.results));
+  .then((data) => generateHTML(data.results))
+  .catch( err => console.log('There was an error:', err) )
 
 // ------------------------------------------
 //  HELPER FUNCTIONS
-//  Display info for Galley div & ModalDiv
 // ------------------------------------------
 
 /**
