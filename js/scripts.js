@@ -61,18 +61,23 @@ function generateHTML(data) {
                       <p class="modal-text">Birthday: ${dob.date}</p>
                   </div>
               </div>`;
-  
+    
     modalDiv.innerHTML = html;
     modalDiv.style.display = "block";
+
     return;
   }
 
 // ------------------------------------------
 //  EVENT LISTENERS
 // ------------------------------------------
-
+// Each time a card is clicked show a modal card with more info of the card
 gallery.addEventListener("click", function (e) {
     const card = e.target.closest(".card");
     const index = card.getAttribute("data-index");
     generateModal(index);
+    const button = document.querySelector("#modal-close-btn")
+    button.addEventListener("click", function() {
+        modalDiv.style.display = "none";
+    })
   });
