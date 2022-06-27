@@ -1,6 +1,7 @@
 //Global variables
 const gallery = document.getElementById("gallery");
 const modalDiv = document.createElement("div");
+
 //Var that creates the modal-container
 modalDiv.className = "modal-container";
 modalDiv.style.display = "none";
@@ -10,10 +11,10 @@ let employeesData = [];
 // ------------------------------------------
 //  FETCH FUNCTIONS
 // ------------------------------------------
-fetch("https://randomuser.me/api/?results=12")
+fetch("https://randomuser.me/api/?results=12&nat=us")
   .then((res) => res.json())
   .then((data) => generateHTML(data.results))
-  .catch( err => console.log('There was an error:', err) )
+  .catch((err) => console.log("There was an error:", err));
 
 // ------------------------------------------
 //  HELPER FUNCTIONS
@@ -21,7 +22,7 @@ fetch("https://randomuser.me/api/?results=12")
 
 /**
  * generateHTML() function
- * @param(data) response from API 
+ * @param(data) response from API
  * @returns(element DOM) creates a literal with all the API info
  */
 function generateHTML(data) {
@@ -76,6 +77,11 @@ function generateModal(index) {
                       <p class="modal-text">${street.number} ${street.name}, ${state}, ${postcode}</p>
                       <p class="modal-text">Birthday: ${birthday}</p>
                   </div>
+                  <div class="modal-btn-container">
+                    <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+                    <button type="button" id="modal-next" class="modal-next btn">Next</button>
+                </div>
+            </div>
               </div>`;
 
   modalDiv.innerHTML = html;
@@ -103,9 +109,84 @@ function formatDate(date) {
 gallery.addEventListener("click", function (e) {
   const card = e.target.closest(".card");
   const index = card.getAttribute("data-index");
+  count = index;
+  console.log(index);
+  console.log(count);
   generateModal(index);
+
   const button = document.querySelector("#modal-close-btn");
   button.addEventListener("click", function () {
     modalDiv.style.display = "none";
   });
+
+  const btnNext = document.querySelector("#modal-next");
+  const btnPrev = document.querySelector("#modal-prev");
+
+  //for (let i = 0; i < 13; i++) {
+  btnNext.addEventListener("click", function (e) {
+    if (btnNext.textContent === "Next") {
+      count++;
+      console.log(`count for next ${count}`);
+      generateModal(count);
+      button.addEventListener("click", function () {
+        modalDiv.style.display = "none";
+      });
+    }
+  });
+  //}
+});
+
+// Search Component Element
+const header = document.querySelector(".search-container");
+const searchComponent = `
+  <form action="#" method="get">
+  <input type="search" id="search-input" class="search-input" placeholder="Search...">
+  <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+  </form>
+
+`;
+header.insertAdjacentHTML("beforeend", searchComponent);
+const search = document.querySelector("#search-input")
+
+
+/*
+ * Initialize searchFunction() function that will display only the data according to the searchInput.
+* When the "Search" is performed, the student data is filtered so that only students whose name includes the 
+* search value are shown.
+* @param (searchInput) search input value
+* @param (list) array of student data, 
+* 
+*/
+function searchFunction(searchInput, data) {
+  // array of new objects from the data
+  let newEmployeeList = [];
+ 
+  // for loop that iterate over the list of students and select just the ones that meet the condition
+  for(let i=0; i < data.length; i++) {
+     const firstName = data[i].name.first.toLowerCase();
+     const lastName = data[i].name.last.toLowerCase();
+     console.log(firstName)
+     console.log(lastName)
+     
+     if(firstName.includes(searchInput.value.toLowerCase()) || lastName.includes(searchInput.value.toLowerCase()) ){
+        newEmployeeList.push(data[i]);
+     }
+         
+  }
+  console.log(newEmployeeList)
+  //console.log(newEmployeeList);   
+  // call functions to display newList, pagination and/or a message if it does not meet the requirements
+  generateHTML(newEmployeeList)
+  
+
+}
+
+// event Listener for inputSearch that returns
+search.addEventListener("keyup", () => {
+  // Condition that takes the input different to zero
+  if (search.value.length != 0) {
+    searchFunction(search, employeesData);
+  } else {
+    generateHTML(employeesData)
+  }
 });
