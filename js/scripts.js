@@ -151,17 +151,17 @@ const search = document.querySelector("#search-input")
 
 /*
  * Initialize searchFunction() function that will display only the data according to the searchInput.
-* When the "Search" is performed, the student data is filtered so that only students whose name includes the 
+* When the "Search" is performed, the employee data is filtered so that only students whose name includes the 
 * search value are shown.
 * @param (searchInput) search input value
-* @param (list) array of student data, 
+* @param (employeeData) array of employee data, 
 * 
 */
 function searchFunction(searchInput, data) {
   // array of new objects from the data
   let newEmployeeList = [];
  
-  // for loop that iterate over the list of students and select just the ones that meet the condition
+  // for loop that iterate over the employee data and select just the ones that meet the condition
   for(let i=0; i < data.length; i++) {
      const firstName = data[i].name.first.toLowerCase();
      const lastName = data[i].name.last.toLowerCase();
@@ -175,7 +175,6 @@ function searchFunction(searchInput, data) {
   }
   console.log(newEmployeeList)
   //console.log(newEmployeeList);   
-  // call functions to display newList, pagination and/or a message if it does not meet the requirements
   generateHTML(newEmployeeList)
   
 
