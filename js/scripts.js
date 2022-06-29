@@ -13,12 +13,16 @@ let employeesData = [];
 // ------------------------------------------
 fetch("https://randomuser.me/api/?results=12&nat=us")
   .then((res) => res.json())
-  .then((data) => generateHTML(data.results))
+  .then((data) => loadData(data.results))
   .catch((err) => console.log("There was an error:", err));
 
 // ------------------------------------------
 //  HELPER FUNCTIONS
 // ------------------------------------------
+function loadData(data) {
+  employeesData = data;
+  generateHTML(employeesData)
+}
 
 /**
  * generateHTML() function
@@ -26,9 +30,9 @@ fetch("https://randomuser.me/api/?results=12&nat=us")
  * @returns(element DOM) creates a literal with all the API info
  */
 function generateHTML(data) {
-  employeesData = data;
+ 
   let html = "";
-  employeesData.map((employee, index) => {
+  data.map((employee, index) => {
     html = `<div class="card" data-index="${index}">
                   <div class="card-img-container">
                       <img class="card-img" src="${employee.picture.large}" alt="profile picture">
@@ -87,6 +91,28 @@ function generateModal(index) {
   modalDiv.innerHTML = html;
   modalDiv.style.display = "block";
 
+  const btnNext = document.querySelector("#modal-next");
+  console.log(btnNext)
+  const btnPrev = document.querySelector("#modal-prev");
+  const button = document.querySelector("#modal-close-btn");
+  
+
+  btnNext.addEventListener("click", function (e) {
+    
+    // const modal = document.querySelector(".modal");
+    // console.log(modal)
+    // const index = modal.getAttribute("data-index");
+    console.log(index)
+    if (btnNext.textContent === "Next") {
+      console.log(generateModal(index));
+  
+    }
+  });
+  
+  button.addEventListener("click", function () {
+    modalDiv.style.display = "none";
+  });
+
   return;
 }
 
@@ -101,7 +127,6 @@ function formatDate(date) {
   const year = new Date(date).getFullYear();
   return `${month}/${day}/${year}`;
 }
-
 // ------------------------------------------
 //  EVENT LISTENERS
 // ------------------------------------------
@@ -109,31 +134,12 @@ function formatDate(date) {
 gallery.addEventListener("click", function (e) {
   const card = e.target.closest(".card");
   const index = card.getAttribute("data-index");
-  count = index;
-  console.log(index);
-  console.log(count);
   generateModal(index);
 
   const button = document.querySelector("#modal-close-btn");
   button.addEventListener("click", function () {
     modalDiv.style.display = "none";
   });
-
-  const btnNext = document.querySelector("#modal-next");
-  const btnPrev = document.querySelector("#modal-prev");
-
-  //for (let i = 0; i < 13; i++) {
-  btnNext.addEventListener("click", function (e) {
-    if (btnNext.textContent === "Next") {
-      count++;
-      console.log(`count for next ${count}`);
-      generateModal(count);
-      button.addEventListener("click", function () {
-        modalDiv.style.display = "none";
-      });
-    }
-  });
-  //}
 });
 
 // Search Component Element
@@ -146,46 +152,44 @@ const searchComponent = `
 
 `;
 header.insertAdjacentHTML("beforeend", searchComponent);
-const search = document.querySelector("#search-input")
-
+const search = document.querySelector("#search-input");
 
 /*
  * Initialize searchFunction() function that will display only the data according to the searchInput.
-* When the "Search" is performed, the employee data is filtered so that only students whose name includes the 
-* search value are shown.
-* @param (searchInput) search input value
-* @param (employeeData) array of employee data, 
-* 
-*/
+ * When the "Search" is performed, the employee data is filtered so that only students whose name includes the
+ * search value are shown.
+ * @param (searchInput) search input value
+ * @param (employeeData) array of employee data,
+ *
+ */
 function searchFunction(searchInput, data) {
   // array of new objects from the data
   let newEmployeeList = [];
- 
-  // for loop that iterate over the employee data and select just the ones that meet the condition
-  for(let i=0; i < data.length; i++) {
-     const firstName = data[i].name.first.toLowerCase();
-     const lastName = data[i].name.last.toLowerCase();
-     console.log(firstName)
-     console.log(lastName)
-     
-     if(firstName.includes(searchInput.value.toLowerCase()) || lastName.includes(searchInput.value.toLowerCase()) ){
-        newEmployeeList.push(data[i]);
-     }
-         
-  }
-  console.log(newEmployeeList)
-  //console.log(newEmployeeList);   
-  generateHTML(newEmployeeList)
-  
 
+  // for loop that iterate over the employee data and select just the ones that meet the condition
+  for (let i = 0; i < data.length; i++) {
+    const firstName = data[i].name.first.toLowerCase();
+    const lastName = data[i].name.last.toLowerCase();
+
+    if (
+      firstName.includes(searchInput.value.toLowerCase()) ||
+      lastName.includes(searchInput.value.toLowerCase())
+    ) {
+      newEmployeeList.push(data[i]);
+    }
+  }
+  console.log(newEmployeeList);
+  generateHTML(newEmployeeList);
 }
 
 // event Listener for inputSearch that returns
 search.addEventListener("keyup", () => {
   // Condition that takes the input different to zero
   if (search.value.length != 0) {
+    gallery.innerHTML = "";
     searchFunction(search, employeesData);
   } else {
-    generateHTML(employeesData)
+    generateHTML(employeesData);
+    console.log(employeesData);
   }
 });
