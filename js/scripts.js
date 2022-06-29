@@ -19,18 +19,24 @@ fetch("https://randomuser.me/api/?results=12&nat=us")
 // ------------------------------------------
 //  HELPER FUNCTIONS
 // ------------------------------------------
+/**
+ * loadData() function
+ * @param(data) response from API
+ * loading data into an empty array to use them in a modal
+ * call function generateHTML()
+ */
+
 function loadData(data) {
   employeesData = data;
-  generateHTML(employeesData)
+  generateHTML(employeesData);
 }
 
 /**
  * generateHTML() function
- * @param(data) response from API
+ * @param(data) employeeData array
  * @returns(element DOM) creates a literal with all the API info
  */
 function generateHTML(data) {
- 
   let html = "";
   data.map((employee, index) => {
     html = `<div class="card" data-index="${index}">
@@ -69,7 +75,7 @@ function generateModal(index) {
   const birthday = formatDate(dob.date);
 
   // Creates the literal template for the modal with the employee object destructing info
-  let html = `<div class="modal">
+  let html = `<div class="modal" data-index="${index}">
                   <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
                   <div class="modal-info-container">
                       <img class="modal-img" src="${picture.large}" alt="profile picture">
@@ -91,30 +97,51 @@ function generateModal(index) {
   modalDiv.innerHTML = html;
   modalDiv.style.display = "block";
 
-  const btnNext = document.querySelector("#modal-next");
-  console.log(btnNext)
-  const btnPrev = document.querySelector("#modal-prev");
-  const button = document.querySelector("#modal-close-btn");
-  
+  //Grabbing Dom elements
+  const prevBtn = document.querySelector("#modal-prev");
+  const nextBtn = document.querySelector("#modal-next");
+  const indexModal = document.querySelector(".modal").getAttribute("data-index");
+  let count = indexModal 
 
-  btnNext.addEventListener("click", function (e) {
-    
-    // const modal = document.querySelector(".modal");
-    // console.log(modal)
-    // const index = modal.getAttribute("data-index");
-    console.log(index)
-    if (btnNext.textContent === "Next") {
-      console.log(generateModal(index));
-  
-    }
+  /**
+  * Event Listener that show a modal
+  * generateModal function @param(number) Shows the info of the next employee card 
+  * closeBtn Function @param(button) Helper function that hide the modal
+  */
+  prevBtn.addEventListener("click", function () {
+    count <= 0 ? count = 0 : count -- 
+    generateModal(count);
+
+    const button = document.querySelector("#modal-close-btn");
+    closedBtn(button)
   });
-  
-  button.addEventListener("click", function () {
-    modalDiv.style.display = "none";
+
+   /**
+    * Event Listener that show a modal
+    * generateModal function @param(number) Shows the info of the next employee card 
+    * closeBtn Function @param(button) Helper function that hide the modal
+    */
+  nextBtn.addEventListener("click", function () {
+    count >= 11 ? count = 11 : count ++
+    generateModal(count);
+
+    const button = document.querySelector("#modal-close-btn");
+    closedBtn(button)
   });
 
   return;
 }
+
+/**
+  * closeBtn Function
+  * @param(button) Helper function that hide the modal
+*/
+
+function closedBtn(btn) {
+  btn.addEventListener("click", function () {
+    modalDiv.style.display = "none";
+  });
+} 
 
 /**
  * formatDate function
@@ -127,22 +154,32 @@ function formatDate(date) {
   const year = new Date(date).getFullYear();
   return `${month}/${day}/${year}`;
 }
+
 // ------------------------------------------
 //  EVENT LISTENERS
 // ------------------------------------------
-// Each time a card is clicked show a modal card with more info of the card
+
+/**
+* Event Listener that show a modal
+* Each time a card is clicked show a modal card with more info of the card
+* generateModal function @param(number) Shows the info that match with the index of the card 
+* closeBtn Function @param(button) Helper function that hide the modal
+*/
 gallery.addEventListener("click", function (e) {
   const card = e.target.closest(".card");
   const index = card.getAttribute("data-index");
   generateModal(index);
 
   const button = document.querySelector("#modal-close-btn");
-  button.addEventListener("click", function () {
-    modalDiv.style.display = "none";
-  });
+  closedBtn(button)
 });
 
-// Search Component Element
+
+// ------------------------------------------
+//  SEARCH COMPONENT
+// ------------------------------------------
+
+// Creating a literal Search input
 const header = document.querySelector(".search-container");
 const searchComponent = `
   <form action="#" method="get">
@@ -154,14 +191,14 @@ const searchComponent = `
 header.insertAdjacentHTML("beforeend", searchComponent);
 const search = document.querySelector("#search-input");
 
-/*
+/** 
  * Initialize searchFunction() function that will display only the data according to the searchInput.
  * When the "Search" is performed, the employee data is filtered so that only students whose name includes the
  * search value are shown.
  * @param (searchInput) search input value
  * @param (employeeData) array of employee data,
  *
- */
+ **/
 function searchFunction(searchInput, data) {
   // array of new objects from the data
   let newEmployeeList = [];
@@ -182,14 +219,19 @@ function searchFunction(searchInput, data) {
   generateHTML(newEmployeeList);
 }
 
-// event Listener for inputSearch that returns
+/**
+* Event Listener for inputSearch
+* Each time a key is pressed & is different than 0 call the searchFunction() 
+* generateHTML function @param(data) Shows the data on the screen
+*/
 search.addEventListener("keyup", () => {
   // Condition that takes the input different to zero
   if (search.value.length != 0) {
     gallery.innerHTML = "";
     searchFunction(search, employeesData);
   } else {
+    gallery.innerHTML = "";
     generateHTML(employeesData);
-    console.log(employeesData);
+   
   }
 });
