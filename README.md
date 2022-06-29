@@ -4,11 +4,11 @@ JavaScript | HTML | CSS | API
 Dummy app of employee data requested from The Random User Generator API. The info generates 12 info cards and each card display a modal with more info about eaac employee.
 Added a css color gradient background.
 
-![Page Screen](img/homePage.png)
+![Page Screen](images/homePage.png)
 
-![Page Screen](img/searchPage.png)
+![Page Screen](images/searchPage.png)
 
-![Page Screen](img/modalPage.png)
+![Page Screen](images/modalPage.png)
 
 ### Quick Start
 1. Clone the repo-
