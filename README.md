@@ -11,6 +11,6 @@ Added a css color gradient background.
 ![Page Screen](images/modalPage.png)
 
 ### Quick Start
-1. Clone the repo-
+1. Clone the repo-https://github.com/joswald123/publicApiRequest.git
 2. Go to your project folder.
 3. Open the index.Html tab and with a right click open it in a default browser.
