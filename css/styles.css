@@ -16,7 +16,7 @@ html, body {
 body {
     font-family: "Nunito", sans-serif;
     text-align: center;
-    background: linear-gradient(to left bottom, #d8b3c8, #d1b0cd, #c8add3, #bbacd8, #aaabdd, #9cb1e4, #8db7ea, #7cbdec, #72caef, #70d6ee, #77e1ea, #86ebe4);
+    background: linear-gradient(to right top, #fbeaff, #f7dffd, #f4d3fc, #f0c8fa, #ecbcf8);
 }
 
 header {
